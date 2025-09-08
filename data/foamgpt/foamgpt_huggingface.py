@@ -10,7 +10,7 @@ test_file = Path(__file__).parent / 'data' / 'foamgpt_test.jsonl'
 test_ratio = 0.1
 
 # Hugging Face configuration
-repo_id = "LeoYML/FoamGPT"
+repo_id = "ARMINSHIVES/FoamGPT"
 
 def split_data():
     """Split data into training and test sets"""

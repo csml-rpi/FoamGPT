@@ -181,6 +181,8 @@ def main():
 
     config = Config()
     print(f"Config: {config}")
+    print("config.model provider", config.model_provider)
+    print("config.model version", config.model_version)
     llm_service = LLMService(config)
     
     # Load and process data
@@ -196,7 +198,7 @@ def main():
     results = process_cases(grouped_data, llm_service, output_path)
     
     # Print statistics
-    stats = llm_service.get_stats()
+    stats = llm_service.get_statistics()
     print(f"\n📊 Processing Summary:")
     print(f"   Total cases processed: {len(results)}")
     print(f"   LLM calls made: {stats['total_calls']}")
