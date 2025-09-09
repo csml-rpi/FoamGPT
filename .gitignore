@@ -208,6 +208,6 @@ __marimo__/
 
 
 
-data/database/faiss
+data/database
 foamgpt/data
 foamgpt/pytest_cache
