@@ -38,7 +38,7 @@ def tokenize_data(example):
     return tokens
 
 
-ds = (load_dataset("ARMINSHIVES/FoamGPT",)).shuffle()
+ds = (load_dataset("LeoYML/FoamGPT",)).shuffle()
 model="mistralai/Mistral-7B-Instruct-v0.3"
 new_model = "foammistral"
 
@@ -49,7 +49,7 @@ md = AutoModelForCausalLM.from_pretrained(
     quantization_config=quant_config,
     device_map="auto",
     trust_remote_code=True,
-    torch_dtype=torch.float16,
+    torch_dtype=torch.bfloat16,
 )
 
 md.config.use_cache = False
@@ -78,18 +78,18 @@ peft_params = LoraConfig(
 )
 
 training_args = SFTConfig(
-    output_dir="/opt/Armaan/OpenFoam/FoamGPT-main/foammistral",
+    output_dir="./foammistral",
     num_train_epochs=7,
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
-    gradient_accumulation_steps=2, 
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    gradient_accumulation_steps=4, 
     optim="paged_adamw_32bit",
     dataloader_pin_memory=False,
     logging_steps=25,
     learning_rate=3e-4,
     weight_decay=0.001, #0.03
-    fp16=True,
-    bf16=False,
+    fp16=False,
+    bf16=True,
     max_grad_norm=0.3,
     max_steps=-1,
     warmup_ratio=0.03,
