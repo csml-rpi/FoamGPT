@@ -181,8 +181,6 @@ def main():
 
     config = Config()
     print(f"Config: {config}")
-    print("config.model provider", config.model_provider)
-    print("config.model version", config.model_version)
     llm_service = LLMService(config)
     
     # Load and process data
