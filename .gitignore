@@ -208,6 +208,12 @@ __marimo__/
 
 
 
-data/database
+data/faiss/
+!data/faiss/.gitkeep
+data/foamgpt/data/
+!data/foamgpt/data/.gitkeep
+data/foamgpt/raw/
+!data/foamgpt/raw/.gitkeep
+
 foamgpt/data
 foamgpt/pytest_cache
