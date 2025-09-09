@@ -16,11 +16,6 @@ Before you begin, please take note that the finetuning_script code is written an
     - **bitsandbytes 0.45.5**: A library for efficient training of large models
     - **tf-keras 2.19.0**: A high-level API for building and training deep learning models with TensorFlow
 
-## Finetuning Call
-Please type out the following command into command prompt or other terminals and click enter:
-  ```bash
-  python finetuning_script.py
-  ```
 
 ## Environment Setup
 
@@ -43,8 +38,16 @@ python data/foamgpt/foamgpt_gen.py
 python data/foamgpt/foamgpt_data.py
 python data/foamgpt/foamgpt_huggingface.py  
 python data/foamgpt/foamgpt_openai.py
-python finetune/finetuning_script.py
 ```
+
+## Finetuning Call
+Please type out the following command into command prompt or other terminals and click enter:
+  ```bash
+  python finetuning_script.py
+  ```
+
+Ensure that you have gone through the Data Parsing Pipeline before type out the following command into command prompt or other terminals.
+
 ## Using bfloat16 vs float16
 You may recieve an error relating to bfloat16 not being compatable with your graphics card(s). If required, you can make the following changes in finetune/finetuning_script:
 
@@ -116,13 +119,56 @@ training_args = SFTConfig(
 )
 ```
 
+## CUDA Data
+You may run into an issue with your GPU(s) running our of memory. If so you can make the following changes in finetune/fineing_script.py:
 
-## Modifications Made
+### Change bloat16 to float16
+See Using bfloat16 vs float16 Section above
 
-Added config.py to ./data
+### Change bloat16 to float32
+See Using bfloat16 vs float16 Section above except change 
+```bash
+training_args = SFTConfig(
+    ...
+    fp16=False,
+    bf16=True,
+    ...
+)
+```
 
-Added util.py to ./data
+to
 
-Moved data/database → data/fiass/database
+```bash
+training_args = SFTConfig(
+    ...
+    fp16=False,
+    bf16=False,
+    ...
+)
+```
 
-Changed stats = llm_service.get_stats() → stats = llm_service.get_statistics() in data/foamgpt/foamgpt_data.py
+### Changing CUDA Memory Variables
+
+```bash
+training_args = SFTConfig(
+    ...
+    num_train_epochs=7,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    gradient_accumulation_steps=4,
+    ...
+)
+```
+
+```bash
+training_args = SFTConfig(
+    ...
+    num_train_epochs=7,
+    per_device_train_batch_size=1,
+    per_device_eval_batch_size=1,
+    gradient_accumulation_steps=2,
+    ...
+)
+```
+
+If problems still arise, try lowering the arguments above and/or combining these changes with any of the above 2 methods. 
