@@ -212,8 +212,8 @@ data/faiss/
 !data/faiss/.gitkeep
 data/foamgpt/data/
 !data/foamgpt/data/.gitkeep
-data/foamgpt/raw/
-!data/foamgpt/raw/.gitkeep
+data/raw/
+!data/raw/.gitkeep
 
 foamgpt/data
 foamgpt/pytest_cache
