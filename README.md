@@ -120,7 +120,7 @@ training_args = SFTConfig(
 ```
 
 ## CUDA Data
-You may run into an issue with your GPU(s) running our of memory. If so you can make the following changes in finetune/fineing_script.py:
+You may run into an issue with your GPU(s) running out of memory. If so you can make the following changes in finetune/fineing_script.py:
 
 ### Change bloat16 to float16
 See Using bfloat16 vs float16 Section above
