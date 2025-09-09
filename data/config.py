@@ -13,7 +13,7 @@ class Config:
     run_directory: str = Path(__file__).resolve().parent.parent / "runs"
     case_dir: str = ""
     max_time_limit = 36000 # Max time limit after which the openfoam run will be terminated
-    model_provider: str = "bedrock"
-    model_version: str = "arn:aws:bedrock:us-west-2:991404956194:application-inference-profile/f6tueltt82a2"
+    model_provider: str = "openai"
+    model_version: str = "gpt4o"
     temperature: float = 0.6
     
