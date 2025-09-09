@@ -45,6 +45,78 @@ python data/foamgpt/foamgpt_huggingface.py
 python data/foamgpt/foamgpt_openai.py
 python finetune/finetuning_script.py
 ```
+## Using bfloat16 vs float16
+You may recieve an error relating to bfloat16 not being compatable with your graphics card(s). If required, you can make the following changes in finetune/finetuning_script:
+
+# Quantifcation Configuration
+
+```bash
+quant_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    bnb_4bit_use_double_quant=True,
+)
+```
+
+to 
+
+```bash
+quant_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.float16,
+    bnb_4bit_use_double_quant=True,
+)
+```
+
+# Model
+
+```bash
+md = AutoModelForCausalLM.from_pretrained(
+    model,
+    quantization_config=quant_config,
+    device_map="auto",
+    trust_remote_code=True,
+    torch_dtype=torch.bfloat16,
+)
+```
+
+to 
+
+```bash
+md = AutoModelForCausalLM.from_pretrained(
+    model,
+    quantization_config=quant_config,
+    device_map="auto",
+    trust_remote_code=True,
+    torch_dtype=torch.float16,
+)
+```
+
+# Training Arguments
+
+```bash
+training_args = SFTConfig(
+    ...
+    fp16=False,
+    bf16=True,
+    ...
+)
+```
+
+to
+
+```bash
+training_args = SFTConfig(
+    ...
+    fp16=True,
+    bf16=False,
+    ...
+)
+```
+
+
 ## Modifications Made
 
 Added config.py to ./data
@@ -54,5 +126,3 @@ Added util.py to ./data
 Moved data/database → data/fiass/database
 
 Changed stats = llm_service.get_stats() → stats = llm_service.get_statistics() in data/foamgpt/foamgpt_data.py
-
-Changed some aspects of finetuning_script.py to align with workstation
