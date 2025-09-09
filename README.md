@@ -48,7 +48,7 @@ python finetune/finetuning_script.py
 ## Using bfloat16 vs float16
 You may recieve an error relating to bfloat16 not being compatable with your graphics card(s). If required, you can make the following changes in finetune/finetuning_script:
 
-# Quantifcation Configuration
+### Quantifcation Configuration
 
 ```bash
 quant_config = BitsAndBytesConfig(
@@ -70,7 +70,7 @@ quant_config = BitsAndBytesConfig(
 )
 ```
 
-# Model
+### Model
 
 ```bash
 md = AutoModelForCausalLM.from_pretrained(
@@ -94,7 +94,7 @@ md = AutoModelForCausalLM.from_pretrained(
 )
 ```
 
-# Training Arguments
+### Training Arguments
 
 ```bash
 training_args = SFTConfig(
