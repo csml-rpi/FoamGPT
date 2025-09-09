@@ -172,20 +172,3 @@ class LLMService:
             "average_completion_tokens": self.total_completion_tokens / self.total_calls if self.total_calls > 0 else 0,
             "average_tokens": self.total_tokens / self.total_calls if self.total_calls > 0 else 0
         }
-    
-    def print_statistics(self) -> None:
-        """
-        Print the current statistics of the LLM service.
-        """
-        stats = self.get_statistics()
-        print("\n<LLM Service Statistics>")
-        print(f"Total calls: {stats['total_calls']}")
-        print(f"Failed calls: {stats['failed_calls']}")
-        print(f"Total retries: {stats['retry_count']}")
-        print(f"Total prompt tokens: {stats['total_prompt_tokens']}")
-        print(f"Total completion tokens: {stats['total_completion_tokens']}")
-        print(f"Total tokens: {stats['total_tokens']}")
-        print(f"Average prompt tokens per call: {stats['average_prompt_tokens']:.2f}")
-        print(f"Average completion tokens per call: {stats['average_completion_tokens']:.2f}")
-        print(f"Average tokens per call: {stats['average_tokens']:.2f}\n")
-        print("</LLM Service Statistics>")
