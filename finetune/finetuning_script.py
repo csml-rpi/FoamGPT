@@ -84,6 +84,7 @@ training_args = SFTConfig(
     per_device_eval_batch_size=2,
     gradient_accumulation_steps=4, 
     optim="paged_adamw_32bit",
+    dataloader_pin_memory=False,
     logging_steps=25,
     learning_rate=3e-4,
     weight_decay=0.001, #0.03
