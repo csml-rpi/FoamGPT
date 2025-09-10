@@ -219,5 +219,4 @@ data/database/faiss/
 !data/database/faiss/.gitkeep
 
 foamgpt/data
-foamgpt/pytest_cache
 !foamgpt/data/.gitkeep
