@@ -210,11 +210,11 @@ __marimo__/
 
 data/faiss/*
 !data/faiss/.gitkeep
+foamgpt/data/*
+!foamgpt/data/.gitkeep
 data/foamgpt/data/*
 !data/foamgpt/data/.gitkeep
 data/raw/*
 !data/raw/.gitkeep
 data/database/faiss/*
 !data/database/faiss/.gitkeep
-foamgpt/data/*
-!foamgpt/data/.gitkeep
