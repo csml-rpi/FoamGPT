@@ -1,6 +1,8 @@
 # FoamGPT
 Paper: https://arxiv.org/pdf/2505.04997
 Dataset: https://huggingface.co/datasets/LeoYML/FoamGPT
+CFD-LLMBench: A Benchmark Suite for Evaluating Large Language Models in Computational Fluid Dynamics: https://arxiv.org/abs/2509.20374
+
 ## Finetuning Requirements
 Before you begin, please take note that the finetuning_script code is written and ran the following library versions:
 
