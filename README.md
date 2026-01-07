@@ -173,4 +173,5 @@ training_args = SFTConfig(
 )
 ```
 
-If problems still arise, try lowering the arguments above and/or combining these changes with any of the above 2 methods. 
+If problems still arise, try lowering the arguments above and/or combining these changes with any of the above 2 methods.
+Open a pull request if you wish to contribute to this repo.
