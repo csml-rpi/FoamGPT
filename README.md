@@ -40,7 +40,7 @@ Splitting the same training data across three adapters, by pipeline stage or at 
 | Resource | Where | Contents |
 |---|---|---|
 | Adapters | [🤗 ghzlmc/foamgpt](https://huggingface.co/ghzlmc/foamgpt) | Shared adapters for Nemotron-3-Nano-30B-A3B and Gemma4-26B-A4B; the split and scaling adapters for Nemotron |
-| Reference solutions | [🤗 ghzlmc/foamgpt](https://huggingface.co/ghzlmc/foamgpt) `references/` | Solver results of the 49 evaluation cases, used only to score field fidelity |
+| Reference solutions | [🤗 ghzlmc/foamgpt](https://huggingface.co/ghzlmc/foamgpt/tree/main/references) | Solver results of the 49 evaluation cases, in the adapter repository's `references/` folder; used only to score field fidelity |
 | Teacher traces and splits | [`data/`](data/) | 4,117 Claude Opus 4.6 calls from 126 Foam-Agent runs, repair rounds included; 2,647 training records (variants 1–7) and 1,050 held-out records (variants 8–10) |
 | Evaluation cases | [`dataset/`](dataset/) | Prompts of the 33 held-out Basic cases and 16 Advanced cases from FoamBench |
 | Retrieval indexes | [`code/database/faiss/`](code/database/faiss/) | The agent's FAISS indexes over the OpenFOAM tutorials |
