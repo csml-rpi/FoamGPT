@@ -3,7 +3,7 @@
 # FoamGPT: Fine-Tuning Large Language Models for Agentic Automation of CFD Simulations with OpenFOAM
 
 <!-- TODO: replace XXXX.XXXXX with the arXiv ID once the paper is posted -->
-[![Paper](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX) [![Adapters](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-adapters-yellow)](https://huggingface.co/ghzlmc/foamgpt) [![Data](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-data-orange)](https://huggingface.co/datasets/ghzlmc/foamgpt) [![Workshop paper](https://img.shields.io/badge/NeurIPS%202025-ML4PS%20workshop-4b44ce.svg)](https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_271.pdf) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Paper](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX) [![Adapters](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-adapters-yellow)](https://huggingface.co/ghzlmc/foamgpt) [![Workshop paper](https://img.shields.io/badge/NeurIPS%202025-ML4PS%20workshop-4b44ce.svg)](https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_271.pdf) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 </div>
 
@@ -40,9 +40,10 @@ Splitting the same training data across three adapters, by pipeline stage or at 
 | Resource | Where | Contents |
 |---|---|---|
 | Adapters | [🤗 ghzlmc/foamgpt](https://huggingface.co/ghzlmc/foamgpt) | Shared adapters for Nemotron-3-Nano-30B-A3B and Gemma4-26B-A4B; the split and scaling adapters for Nemotron |
-| Teacher traces and splits | [🤗 dataset](https://huggingface.co/datasets/ghzlmc/foamgpt) → `data/` | 4,117 Claude Opus 4.6 calls from 126 Foam-Agent runs, repair rounds included; 2,647 training records (variants 1–7) and 1,050 held-out records (variants 8–10) |
-| Evaluation cases | [`dataset/`](dataset/) | Prompts of the 33 held-out Basic cases and 16 Advanced cases from FoamBench; their reference solutions come from the 🤗 dataset |
-| Retrieval indexes | [🤗 dataset](https://huggingface.co/datasets/ghzlmc/foamgpt) → `code/database/faiss/` | The agent's FAISS indexes over the OpenFOAM tutorials |
+| Reference solutions | [🤗 ghzlmc/foamgpt](https://huggingface.co/ghzlmc/foamgpt) `references/` | Solver results of the 49 evaluation cases, used only to score field fidelity |
+| Teacher traces and splits | [`data/`](data/) | 4,117 Claude Opus 4.6 calls from 126 Foam-Agent runs, repair rounds included; 2,647 training records (variants 1–7) and 1,050 held-out records (variants 8–10) |
+| Evaluation cases | [`dataset/`](dataset/) | Prompts of the 33 held-out Basic cases and 16 Advanced cases from FoamBench |
+| Retrieval indexes | [`code/database/faiss/`](code/database/faiss/) | The agent's FAISS indexes over the OpenFOAM tutorials |
 | Per-case results | [`results/`](results/) | Every system in the paper; [`results/README.md`](results/README.md) maps each file to its table or figure |
 
 ## Installation
@@ -57,9 +58,9 @@ python3.12 -m venv ~/venvs/vllm020 && ~/venvs/vllm020/bin/pip install -r scripts
 python3.12 -m venv ~/venvs/vllm031 && ~/venvs/vllm031/bin/pip install -r scripts/requirements-vllm0.31.0.txt
 source ~/venvs/vllm020/bin/activate                    # provides the hf command used below
 
-scripts/download_data.sh                               # traces, reference solutions, retrieval indexes
 scripts/fetch_models.sh ~/models nano embedder         # base model at the pinned revision, retrieval embedder
-hf download ghzlmc/foamgpt --local-dir ~/adapters      # fine-tuned adapters
+hf download ghzlmc/foamgpt --exclude "references/*" --local-dir ~/adapters   # fine-tuned adapters
+scripts/download_references.sh                         # reference solutions, needed only for field fidelity
 
 # write the machine-specific paths into the configs
 python3 scripts/localize.py --models-dir ~/models --openfoam-bashrc /opt/openfoam10/etc/bashrc \
@@ -117,11 +118,11 @@ Keep these settings for numbers comparable to the paper: temperature 0.6, a 100,
 assets/        Figures for this README
 code/          Agent harness adapted from Foam-Agent, benchmark runners, scoring scripts
 configs/       Model maps for every system, split-adapter maps, chat templates
-data/          Manifests and scaling subsets; download the traces and splits into this folder
-dataset/       Prompts of the evaluation cases; download the reference solutions into this folder
+data/          Teacher traces, training and held-out sets, manifests, scaling subsets
+dataset/       Prompts of the evaluation cases; scripts/download_references.sh adds their reference solutions
 docs/          Audit of the reference solutions
 results/       Per-case results for every system in the paper
-scripts/       Download, setup, run and scoring scripts; serving environments
+scripts/       Setup, download, run and scoring scripts; serving environments
 training/      Fine-tuning scripts and environments
 workshop2025/  Code of the NeurIPS 2025 ML4PS workshop version
 ```

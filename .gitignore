@@ -3,11 +3,10 @@ env.sh
 configs/*.json
 !configs/experiments.json
 configs/*.env
-# downloaded by scripts/download_data.sh
+# unpacked training data (training/README.md)
 data/*.jsonl
-data/*.jsonl.gz
+# downloaded by scripts/download_references.sh
 dataset/**/GT_Files/
-code/database/faiss/
 # run outputs
 code/experiment-finetuned/
 code/experiment-finetuned-advanced/

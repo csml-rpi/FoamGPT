@@ -3,7 +3,7 @@ import os
 MODEL = "opus-4.6"
 
 # Evaluation cases live in <repo>/dataset: the prompts are in git, the reference solutions
-# (GT_Files) come from scripts/download_data.sh. Set FOAMGPT_DATASET to use another copy.
+# (GT_Files) come from scripts/download_references.sh. Set FOAMGPT_DATASET to use another copy.
 DATASET_ROOT = os.environ.get(
     "FOAMGPT_DATASET", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dataset"))
 DIR_BASIC = os.path.join(DATASET_ROOT, "Basic")

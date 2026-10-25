@@ -58,6 +58,11 @@ def main():
         import nmse_basic as nm
         root = os.path.join("experiment-finetuned", label)
         cases = [(d, str(c)) for d in bu.DATASETS_BASIC for c in bu.CASES_BASIC]
+    base = bu.DIR_ADVANCED if advanced else bu.DIR_BASIC
+    missing = [c for c in cases if not os.path.isdir(os.path.join(base, *[p for p in c if p], "GT_Files"))]
+    if missing:
+        print(f"note: {len(missing)} of {len(cases)} cases have no reference solution in dataset/; their field "
+              "fidelity (NMSE) is reported as 0. Run scripts/download_references.sh to compute it.")
     rows = []
     for fam, var in cases:
         parts = [fam] + ([var] if var else [])

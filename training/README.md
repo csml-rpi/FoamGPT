@@ -11,7 +11,6 @@
 Settings (defaults of both scripts): learning rate 2e-4, cosine schedule with a 0.1 minimum-rate floor, warmup ratio 0.05, 3 epochs, per-device batch 1 with gradient accumulation 16, weight decay 0.01, seed 3407, maximum length 16,384 tokens (longer records are dropped), loss on completion tokens only, thinking disabled. Nemotron: LoRA r = 16, alpha = 32, dropout 0, on `q/k/v/o_proj`, `gate/up/down_proj`, and the Mamba `in/out_proj`; 470 optimizer steps. Gemma4: LoRA r = 16, alpha = 16, dropout 0, on the language-tower attention and feed-forward linears; 471 optimizer steps.
 
 ```bash
-../scripts/download_data.sh traces          # teacher traces and splits into ../data
 gunzip -k ../data/train.jsonl.gz ../data/test.jsonl.gz
 python finetune_nemotron_unified.py --train ../data/train.jsonl --test ../data/test.jsonl --output nemotron-shared
 python finetune_gemma4_26b_a4b_unified.py --train ../data/train.jsonl --test ../data/test.jsonl
