@@ -2,8 +2,12 @@ import os
 
 MODEL = "opus-4.6"
 
-DIR_BASIC = "./Dataset/Basic"
-DIR_ADVANCED = "./Dataset/Advanced"
+# Evaluation cases live in <repo>/dataset: the prompts are in git, the reference solutions
+# (GT_Files) come from scripts/download_data.sh. Set FOAMGPT_DATASET to use another copy.
+DATASET_ROOT = os.environ.get(
+    "FOAMGPT_DATASET", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dataset"))
+DIR_BASIC = os.path.join(DATASET_ROOT, "Basic")
+DIR_ADVANCED = os.path.join(DATASET_ROOT, "Advanced")
 
 EXP_BASIC = "./experiment-basic"
 EXP_ADVANCED = "./experiment-advanced"

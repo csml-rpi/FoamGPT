@@ -1,6 +1,6 @@
 #!/bin/bash
 # Download the base models at the exact revisions used on the second cluster, plus the retrieval embedder.
-# Usage: setup/fetch_models.sh <MODELS_DIR> <name> [<name> ...]
+# Usage: scripts/fetch_models.sh <MODELS_DIR> <name> [<name> ...]
 #   names: nano super qwen38 dsv4 dsv41 embedder   (or: all)
 # Needs huggingface_hub (the `hf` CLI; installed with either requirements file).
 # The embedder goes to the HF cache ($HF_HOME); the harness loads it by name, so run the benchmark with the same HF_HOME.

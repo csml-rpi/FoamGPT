@@ -10,7 +10,7 @@
   NMSE         nmse_basic / nmse_advanced against GT_Files, 9999 when not a success;
                NMSE score per case = 1 (< 0.1), 0.5 (< 0.3) or 0; the run's NMSE score is the mean over cases
 Writes <exp_root>/<label>/score.json and score.csv; prints a summary.
-Usage: run/score_run.py <RUN_LABEL> [--advanced]
+Usage: scripts/score_run.py <RUN_LABEL> [--advanced]
 """
 import csv
 import glob

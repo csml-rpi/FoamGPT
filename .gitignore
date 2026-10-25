@@ -1,8 +1,13 @@
-# written by setup/localize.py
+# written by scripts/localize.py
 env.sh
 configs/*.json
 !configs/experiments.json
 configs/*.env
+# downloaded by scripts/download_data.sh
+data/*.jsonl
+data/*.jsonl.gz
+dataset/**/GT_Files/
+code/database/faiss/
 # run outputs
 code/experiment-finetuned/
 code/experiment-finetuned-advanced/

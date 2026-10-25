@@ -3,20 +3,22 @@
 
 Writes, from configs/experiments.json:
   configs/<ID>.json  per-substep model map for code/benchmark_finetuned*.py (paths filled in)
-  configs/<ID>.env   VENV_ACTIVATE + the experiment's extra environment (sourced by run/run_benchmark.sh)
+  configs/<ID>.env   VENV_ACTIVATE + the experiment's extra environment (sourced by scripts/run_benchmark.sh)
+  configs/SPLIT_<NAME>.json/.env  the same for each split-adapter map in configs/split/ (Table 2)
 and env.sh at the kit root (OpenFOAM bashrc, venvs, HF cache).
 
 Usage:
-  python3 setup/localize.py --models-dir /data/models \
+  python3 scripts/localize.py --models-dir /data/models \
       --openfoam-bashrc /opt/openfoam10/etc/bashrc \
       --venv020 /data/venvs/vllm020 --venv031 /data/venvs/vllm031 \
       [--adapters-dir /data/foamgpt_adapters] [--hf-home /data/hf]
 
-Model folders expected under --models-dir (see setup/fetch_models.sh): nemotron-3-nano-30b-a3b-bf16,
+Model folders expected under --models-dir (see scripts/fetch_models.sh): nemotron-3-nano-30b-a3b-bf16,
 nemotron-3-super-120b-a12b-bf16, qwen3.8-flash-next-bf16, deepseek-v4-flash-0731, deepseek-v4.1-flash.
 Experiments whose model folder or adapter is missing are still written, with a warning.
 """
 import argparse
+import glob
 import json
 import os
 import shlex
@@ -60,10 +62,23 @@ def main():
         json.dump({k: dict(entry) for k in SUBSTEPS}, open(os.path.join(KIT, "configs", f"{exp}.json"), "w"), indent=2)
         with open(os.path.join(KIT, "configs", f"{exp}.env"), "w") as f:
             f.write(f"VENV_ACTIVATE={shlex.quote(os.path.join(venvs[s['venv']], 'bin', 'activate'))}\n")
-            if s.get("patch"):
-                f.write(f"HARNESS_PATCH={shlex.quote(s['patch'])}\n")
             for k, v in s.get("env", {}).items():
                 f.write(f"export {k}={shlex.quote(v)}\n")
+        print(f"wrote configs/{exp}.json, configs/{exp}.env")
+    # Split-adapter systems (Table 2): configs/split/<name>.json -> configs/SPLIT_<NAME>.json
+    nano = os.path.join(os.path.abspath(a.models_dir), "nemotron-3-nano-30b-a3b-bf16")
+    for path in sorted(glob.glob(os.path.join(KIT, "configs", "split", "*.json"))):
+        exp = "SPLIT_" + os.path.splitext(os.path.basename(path))[0].upper()
+        if not a.adapters_dir:
+            print(f"skip {exp}: needs --adapters-dir")
+            continue
+        text = open(path).read().replace("@BASE_MODEL_DIR@", nano)
+        text = text.replace("@ADAPTERS_DIR@", os.path.abspath(a.adapters_dir))
+        with open(os.path.join(KIT, "configs", f"{exp}.json"), "w") as f:
+            f.write(text)
+        with open(os.path.join(KIT, "configs", f"{exp}.env"), "w") as f:
+            f.write(f"VENV_ACTIVATE={shlex.quote(os.path.join(venvs['vllm020'], 'bin', 'activate'))}\n")
+            f.write("export FOAMGPT_STRIP_FINAL=1\n")
         print(f"wrote configs/{exp}.json, configs/{exp}.env")
     with open(os.path.join(KIT, "env.sh"), "w") as f:
         f.write(f"export FOAMGPT_KIT={shlex.quote(KIT)}\n")

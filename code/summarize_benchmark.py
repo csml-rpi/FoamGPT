@@ -39,6 +39,8 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+from benchmark_utils import DIR_BASIC
+
 
 TOKEN_PATTERNS = {
     "prompt": re.compile(r"Total prompt tokens:\s*(\d+)", re.IGNORECASE),
@@ -308,7 +310,7 @@ def main():
                         help=f"Router retry cap used during the run (default: {DEFAULT_MAX_LOOP}, "
                              "mirrors src/config.py Config.max_loop). A failed case is "
                              "classified 'max-loop-reached' if it hit this cap, else 'early-exit'.")
-    parser.add_argument("--dataset_root", default="Dataset/Basic",
+    parser.add_argument("--dataset_root", default=DIR_BASIC,
                         help="Directory (relative to repo_root) holding <dataset>/<case>/usr_requirement.txt")
     args = parser.parse_args()
 

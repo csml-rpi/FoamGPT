@@ -1,5 +1,7 @@
 # Data
 
+The three `.jsonl.gz` files are on Hugging Face; `scripts/download_data.sh traces` puts them here. The manifests and scaling subsets are in git.
+
 | File | Records | Content |
 |---|---|---|
 | `teacher_traces.jsonl.gz` | 4,117 | Every LLM call made by the teacher (Claude Opus 4.6) in Foam-Agent rollouts, one rollout per case over the 126 cases (110 Basic, 16 Advanced) |

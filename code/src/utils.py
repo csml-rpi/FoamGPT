@@ -843,9 +843,13 @@ class _VLLMChatWrapper:
         #    it appears as long as it's not part of 'finally' / 'finalize'.
         #    Negative lookahead (?![a-z]) guards against those words while
         #    still matching 'finalBelow', 'final{', 'final ', etc.
-        # E37 (FoamGPT): step 2 disabled. This copy serves only Nemotron-3-Super, which has no Harmony
-        # channels; the rule cut valid JSON at any lowercase "final" in the answer (E33 forwardStep/8, pitzDaily/8).
-        # kit_e46 (E46-E48, untuned baselines on E37's protocol): same, step 2 stays disabled.
+        #    Off by default: in the answers of models without Harmony channels the rule can cut valid JSON
+        #    at a lowercase "final". The configs that reproduce runs made with it (the shared and split
+        #    adapters, the untuned Nemotron-Super run E33) set FOAMGPT_STRIP_FINAL=1.
+        if os.environ.get("FOAMGPT_STRIP_FINAL") == "1":
+            markers = list(re.finditer(r"final(?![a-z])", cleaned))
+            if markers:
+                cleaned = cleaned[markers[-1].end():].lstrip(" \t\r\n:>")
         return cleaned
 
     @staticmethod
