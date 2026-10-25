@@ -1,0 +1,10 @@
+# written by setup/localize.py
+env.sh
+configs/*.json
+!configs/experiments.json
+configs/*.env
+# run outputs
+code/experiment-finetuned/
+code/experiment-finetuned-advanced/
+__pycache__/
+*.pyc

@@ -1,0 +1,1 @@
+do a shallow water simulation over a square bump using the shallowWaterFoam solver. The domain spans 1 x 1 x 0.1, discretized into 20 x 20 x 1 grid points. The simulation initializes with a uniform water depth of 0.08 m and a uniform momentum field of (0.001,0,0). The simulation runs from 0 s to 100 s with a timestep of 0.1 s and writes results every 1 s. 

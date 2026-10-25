@@ -1,0 +1,65 @@
+{
+  "parse_case_info": {
+    "model_provider": "huggingface",
+    "model_version": "@BASE_MODEL_DIR@",
+    "temperature": 0.6,
+    "lora_adapter_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/plan",
+    "chat_template_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/plan/chat_template.jinja"
+  },
+  "build_advice": {
+    "model_provider": "huggingface",
+    "model_version": "@BASE_MODEL_DIR@",
+    "temperature": 0.6,
+    "lora_adapter_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/plan",
+    "chat_template_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/plan/chat_template.jinja"
+  },
+  "decompose_subtasks": {
+    "model_provider": "huggingface",
+    "model_version": "@BASE_MODEL_DIR@",
+    "temperature": 0.6,
+    "lora_adapter_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/plan",
+    "chat_template_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/plan/chat_template.jinja"
+  },
+  "generate_file": {
+    "model_provider": "huggingface",
+    "model_version": "@BASE_MODEL_DIR@",
+    "temperature": 0.6,
+    "lora_adapter_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/write",
+    "chat_template_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/write/chat_template.jinja"
+  },
+  "allrun_commands": {
+    "model_provider": "huggingface",
+    "model_version": "@BASE_MODEL_DIR@",
+    "temperature": 0.6,
+    "lora_adapter_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/write",
+    "chat_template_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/write/chat_template.jinja"
+  },
+  "allrun_script": {
+    "model_provider": "huggingface",
+    "model_version": "@BASE_MODEL_DIR@",
+    "temperature": 0.6,
+    "lora_adapter_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/write",
+    "chat_template_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/write/chat_template.jinja"
+  },
+  "error_analysis": {
+    "model_provider": "huggingface",
+    "model_version": "@BASE_MODEL_DIR@",
+    "temperature": 0.6,
+    "lora_adapter_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/review",
+    "chat_template_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/review/chat_template.jinja"
+  },
+  "rewrite_plan": {
+    "model_provider": "huggingface",
+    "model_version": "@BASE_MODEL_DIR@",
+    "temperature": 0.6,
+    "lora_adapter_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/review",
+    "chat_template_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/review/chat_template.jinja"
+  },
+  "rewrite_files": {
+    "model_provider": "huggingface",
+    "model_version": "@BASE_MODEL_DIR@",
+    "temperature": 0.6,
+    "lora_adapter_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/write",
+    "chat_template_path": "@ADAPTERS_DIR@/nemotron-3-nano-30b/split/stage-specific/write/chat_template.jinja"
+  }
+}

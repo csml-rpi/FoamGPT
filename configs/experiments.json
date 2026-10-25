@@ -1,0 +1,53 @@
+{
+  "_comment": "Experiment specs. setup/localize.py expands each into configs/<ID>.json (the per-substep model map read by code/benchmark_finetuned*.py; the same model for all 9 substeps, temperature 0.6) and configs/<ID>.env (venv + extra environment). model = folder name under --models-dir; adapter = folder under --adapters-dir (adapters are not in this repo); chat_template = file in configs/templates or @ADAPTERS_DIR@/...; venv = vllm020 (vLLM 0.20.1) or vllm031 (vLLM 0.31.0); patch = harness patch needed to reproduce exactly (see README).",
+  "BASE_NANO": {
+    "model": "nemotron-3-nano-30b-a3b-bf16",
+    "venv": "vllm020",
+    "env": {}
+  },
+  "E32_UNIFIED": {
+    "model": "nemotron-3-nano-30b-a3b-bf16",
+    "adapter": "nemotron-3-nano-30b/shared",
+    "chat_template": "@ADAPTERS_DIR@/nemotron-3-nano-30b/shared/chat_template.jinja",
+    "venv": "vllm020",
+    "env": {},
+    "patch": "setup/e32_final_strip.patch"
+  },
+  "E33_SUPER_BASE": {
+    "model": "nemotron-3-super-120b-a12b-bf16",
+    "chat_template": "nemotron-unified.chat_template.jinja",
+    "venv": "vllm020",
+    "env": {},
+    "patch": "setup/e32_final_strip.patch"
+  },
+  "E37_SUPER_NOSTRIP": {
+    "model": "nemotron-3-super-120b-a12b-bf16",
+    "chat_template": "nemotron-unified.chat_template.jinja",
+    "venv": "vllm020",
+    "env": {}
+  },
+  "E46_QWEN38_NOSTRIP": {
+    "model": "qwen3.8-flash-next-bf16",
+    "chat_template": "qwen3.8-flash-next.multisys.jinja",
+    "venv": "vllm031",
+    "env": {
+      "FOAMAGENT_HF_FORCE_LORA_ENGINE": "0"
+    }
+  },
+  "E47_DSV4F_NOSTRIP": {
+    "model": "deepseek-v4-flash-0731",
+    "chat_template": "deepseek-v4-chat.jinja",
+    "venv": "vllm031",
+    "env": {
+      "FOAMAGENT_HF_FORCE_LORA_ENGINE": "0"
+    }
+  },
+  "E48_DSV41F_NOSTRIP": {
+    "model": "deepseek-v4.1-flash",
+    "chat_template": "deepseek-v4.1-flash.chat_template.jinja",
+    "venv": "vllm031",
+    "env": {
+      "FOAMAGENT_HF_FORCE_LORA_ENGINE": "0"
+    }
+  }
+}

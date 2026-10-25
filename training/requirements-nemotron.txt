@@ -1,0 +1,7 @@
+# shared Nemotron adapter (versions recorded with the trained adapter)
+trl==0.24.0
+transformers==4.56.2
+torch==2.7.1
+peft==0.18.1
+datasets==4.3.0
+tokenizers==0.22.2
