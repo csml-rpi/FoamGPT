@@ -19,7 +19,7 @@ source "$KIT/configs/$EXP.env"          # VENV_ACTIVATE and the experiment's env
 set +eu; source "$FOAMGPT_OPENFOAM_BASHRC"; set -eu
 source "$VENV_ACTIVATE"
 
-# ---- Protocol constants (identical for every run in the paper). Do not change them for comparable results. ----
+# ---- Protocol constants used for the included results. Keep them fixed for comparable results. ----
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1,2,3}"
 export FOAMAGENT_HF_TP="${FOAMAGENT_HF_TP:-4}"
 export FOAMAGENT_HF_MAX_MODEL_LEN=100000

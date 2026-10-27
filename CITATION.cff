@@ -25,16 +25,12 @@ authors:
   - family-names: Pan
     given-names: Shaowu
 preferred-citation:
-  type: article
-  title: "FoamGPT: Fine-Tuning Large Language Models for Agentic Automation of CFD Simulations with OpenFOAM"
-  # TODO: add the arXiv identifier once the paper is posted
-  journal: "arXiv preprint"
-  year: 2026
+  type: conference-paper
+  title: "FoamGPT: Fine-Tuning Large Language Model for Agentic Automation of CFD Simulations with OpenFOAM"
+  collection-title: "Machine Learning and the Physical Sciences Workshop, NeurIPS"
+  year: 2025
+  url: "https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_271.pdf"
   authors:
-    - family-names: Wang
-      given-names: Jiaying
-    - family-names: Zhu
-      given-names: Mingzhi
     - family-names: Yue
       given-names: Ling
     - family-names: Xu
@@ -43,11 +39,5 @@ preferred-citation:
       given-names: Tingwen
     - family-names: Somasekharan
       given-names: Nithin
-    - family-names: Zeng
-      given-names: Yadong
-    - family-names: Xu
-      given-names: Hang
-    - family-names: Di
-      given-names: Shimin
     - family-names: Pan
       given-names: Shaowu

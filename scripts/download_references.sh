@@ -1,5 +1,5 @@
 #!/bin/bash
-# Download the reference solutions of the 49 evaluation cases into dataset/**/GT_Files.
+# Download the reference solutions of the 49 evaluation cases into data/dataset/**/GT_Files.
 # Only the field-fidelity (NMSE) scorer reads them; execution success does not need them.
 # They sit in the adapter repository on Hugging Face, next to the adapters.
 # Usage: scripts/download_references.sh                  (from Hugging Face)
@@ -17,5 +17,7 @@ else
   hf download "$REPO" "$FILE" --local-dir "$TMP" >/dev/null
   ARCHIVE="$TMP/$FILE"
 fi
-tar -xzf "$ARCHIVE" -C "$ROOT"
-echo "references: $(find "$ROOT/dataset" -type d -name GT_Files | wc -l | tr -d ' ') GT_Files folders in dataset/"
+# The published archive contains dataset/ at its top level.
+mkdir -p "$ROOT/data"
+tar -xzf "$ARCHIVE" -C "$ROOT/data"
+echo "references: $(find "$ROOT/data/dataset" -type d -name GT_Files | wc -l | tr -d ' ') GT_Files folders in data/dataset/"

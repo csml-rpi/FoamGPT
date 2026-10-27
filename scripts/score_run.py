@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Score one run the way the paper's results were scored.
+"""Score one run using the protocol of the included evaluation results.
 
   success      End rule: some log.*Foam in the case's run dir has "End" as its second-to-last line
                (summarize_benchmark.solver_ended_cleanly)
@@ -61,7 +61,7 @@ def main():
     base = bu.DIR_ADVANCED if advanced else bu.DIR_BASIC
     missing = [c for c in cases if not os.path.isdir(os.path.join(base, *[p for p in c if p], "GT_Files"))]
     if missing:
-        print(f"note: {len(missing)} of {len(cases)} cases have no reference solution in dataset/; their field "
+        print(f"note: {len(missing)} of {len(cases)} cases have no reference solution in data/dataset/; their field "
               "fidelity (NMSE) is reported as 0. Run scripts/download_references.sh to compute it.")
     rows = []
     for fam, var in cases:

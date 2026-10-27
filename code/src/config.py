@@ -9,7 +9,7 @@ class Config:
     batchsize: int = 10
     searchdocs: int = 2 # max(10, searchdocs)
     run_times: int = 1  # current run number (for directory naming)
-    database_path: str = Path(__file__).resolve().parent.parent / "database"
+    database_path: str = Path(__file__).resolve().parents[2] / "data" / "retrieval"
     run_directory: str = Path(__file__).resolve().parent.parent / "runs"
     case_dir: str = ""
     max_time_limit: int = 360 # Max time limit after which the openfoam run will be terminated, in seconds

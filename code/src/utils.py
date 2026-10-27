@@ -72,7 +72,7 @@ def load_faiss_dbs(config: Optional[Config] = None):
     cfg = config or Config()
     embedding_model = get_embedding_model(cfg)
 
-    base_dir = Path(__file__).resolve().parent.parent / "database" / "faiss"
+    base_dir = Path(cfg.database_path) / "faiss"
 
     # Sanitize model name for directory usage
     model_dir_name = (cfg.embedding_model or "").replace("/", "_").replace(":", "_")

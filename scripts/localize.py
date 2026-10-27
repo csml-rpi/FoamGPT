@@ -4,7 +4,7 @@
 Writes, from configs/experiments.json:
   configs/<ID>.json  per-substep model map for code/benchmark_finetuned*.py (paths filled in)
   configs/<ID>.env   VENV_ACTIVATE + the experiment's extra environment (sourced by scripts/run_benchmark.sh)
-  configs/SPLIT_<NAME>.json/.env  the same for each split-adapter map in configs/split/ (Table 2)
+  configs/SPLIT_<NAME>.json/.env  the same for each split-adapter map in configs/split/
 and env.sh at the kit root (OpenFOAM bashrc, venvs, HF cache).
 
 Usage:
@@ -65,7 +65,7 @@ def main():
             for k, v in s.get("env", {}).items():
                 f.write(f"export {k}={shlex.quote(v)}\n")
         print(f"wrote configs/{exp}.json, configs/{exp}.env")
-    # Split-adapter systems (Table 2): configs/split/<name>.json -> configs/SPLIT_<NAME>.json
+    # Split-adapter systems: configs/split/<name>.json -> configs/SPLIT_<NAME>.json
     nano = os.path.join(os.path.abspath(a.models_dir), "nemotron-3-nano-30b-a3b-bf16")
     for path in sorted(glob.glob(os.path.join(KIT, "configs", "split", "*.json"))):
         exp = "SPLIT_" + os.path.splitext(os.path.basename(path))[0].upper()

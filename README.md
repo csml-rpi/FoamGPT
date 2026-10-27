@@ -2,22 +2,17 @@
 
 # FoamGPT: Fine-Tuning Large Language Models for Agentic Automation of CFD Simulations with OpenFOAM
 
-<!-- TODO: replace XXXX.XXXXX with the arXiv ID once the paper is posted -->
-[![Paper](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](https://arxiv.org/abs/XXXX.XXXXX) [![Adapters](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-adapters-yellow)](https://huggingface.co/ghzlmc/foamgpt) [![Workshop paper](https://img.shields.io/badge/NeurIPS%202025-ML4PS%20workshop-4b44ce.svg)](https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_271.pdf) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Workshop paper](https://img.shields.io/badge/NeurIPS%202025-ML4PS%20workshop-4b44ce.svg)](https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_271.pdf) [![Adapters](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-adapters-yellow)](https://huggingface.co/ghzlmc/foamgpt) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 </div>
 
-FoamGPT runs an OpenFOAM simulation agent on a **local open-weight model**. A frontier teacher (Claude Opus 4.6) drives [Foam-Agent](https://github.com/csml-rpi/Foam-Agent) through public tutorial cases, and every call it makes is recorded, including error diagnosis and repair. **One LoRA adapter** trained on these traces lets a 26B–30B open-weight model serve **all nine LLM call sites** of the agent on a single node, so no case data leaves the machine.
+FoamGPT fine-tunes open-weight language models to automate CFD simulations with OpenFOAM and [Foam-Agent](https://github.com/csml-rpi/Foam-Agent). The [NeurIPS 2025 ML4PS workshop paper](https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_271.pdf) introduces the approach: curate training data from OpenFOAM tutorials, fine-tune a language model, and use it to generate simulation files within an agent workflow.
+
+This repository contains the current implementation. It trains **one shared LoRA adapter** on teacher traces, including error diagnosis and repair, to serve **all nine LLM call sites** with a local 26B–30B model. The results below describe this implementation; the linked workshop paper documents the earlier study.
 
 <p align="center">
   <img src="assets/overview.png" width="95%" alt="FoamGPT overview: teacher rollouts, one shared adapter for nine call sites, local execution">
 </p>
-
-## News
-
-<!-- TODO: dates -->
-- **[2026-10]** Paper on arXiv; code, data, and adapters released.
-- **[2025-12]** The first FoamGPT paper appeared at the NeurIPS 2025 ML4PS workshop; its code is in [`workshop2025/`](workshop2025/).
 
 ## Results
 
@@ -33,18 +28,7 @@ Success rate on 33 held-out FoamBench cases: new parameter values of the 11 trai
 | Qwen3.8, untuned | 125B | ✓ | 21.2 |
 | Nemotron-Nano, untuned | 30B | ✓ | 0.0 |
 
-Splitting the same training data across three adapters, by pipeline stage or at random, lowers the success rate to 34.3–43.4%. The paper also reports field fidelity, the 16 out-of-distribution Advanced cases, and which call sites carry the gain.
-
-## What is released
-
-| Resource | Where | Contents |
-|---|---|---|
-| Adapters | [🤗 ghzlmc/foamgpt](https://huggingface.co/ghzlmc/foamgpt) | Shared adapters for Nemotron-3-Nano-30B-A3B and Gemma4-26B-A4B; the split and scaling adapters for Nemotron |
-| Reference solutions | [🤗 ghzlmc/foamgpt](https://huggingface.co/ghzlmc/foamgpt/tree/main/references) | Solver results of the 49 evaluation cases, in the adapter repository's `references/` folder; used only to score field fidelity |
-| Teacher traces and splits | [`data/`](data/) | 4,117 Claude Opus 4.6 calls from 126 Foam-Agent runs, repair rounds included; 2,647 training records (variants 1–7) and 1,050 held-out records (variants 8–10) |
-| Evaluation cases | [`dataset/`](dataset/) | Prompts of the 33 held-out Basic cases and 16 Advanced cases from FoamBench |
-| Retrieval indexes | [`code/database/faiss/`](code/database/faiss/) | The agent's FAISS indexes over the OpenFOAM tutorials |
-| Per-case results | [`results/`](results/) | Every system in the paper; [`results/README.md`](results/README.md) maps each file to its table or figure |
+Splitting the same training data across three adapters, by pipeline stage or at random, lowers the success rate to 34.3–43.4%. [Per-case results](data/results/README.md) include field fidelity, the 16 out-of-distribution Advanced cases, and call-site ablations. [Data documentation](data/README.md) describes the teacher traces, evaluation cases, and retrieval indexes.
 
 ## Installation
 
@@ -77,74 +61,67 @@ scripts/run_benchmark.sh E32_UNIFIED 1
 
 One run takes 18–26 hours on a node with four A100 GPUs. Running the same command again resumes an interrupted run. Transcripts, case directories and scores are written to `code/experiment-finetuned/E32_UNIFIED_holdout_run1/`.
 
-## Reproducing the paper
+## Training and evaluation
 
 ### Training
 
 ```bash
-cd training
-gunzip -k ../data/train.jsonl.gz ../data/test.jsonl.gz
-python finetune_nemotron_unified.py --train ../data/train.jsonl --test ../data/test.jsonl --output nemotron-shared
-python finetune_gemma4_26b_a4b_unified.py --train ../data/train.jsonl --test ../data/test.jsonl
+# Run from the repository root, in the corresponding training environment
+gunzip -k data/train.jsonl.gz data/test.jsonl.gz
+python scripts/training/finetune_nemotron_unified.py --train data/train.jsonl --test data/test.jsonl --output nemotron-shared
+python scripts/training/finetune_gemma4_26b_a4b_unified.py --train data/train.jsonl --test data/test.jsonl
 ```
 
-Both scripts train one rank-16 LoRA adapter for three epochs on all nine call sites. The split and scaling adapters use the same script on subsets of the data. Settings and environments are in [`training/README.md`](training/README.md).
+Both scripts train one rank-16 LoRA adapter for three epochs on all nine call sites. The split and scaling adapters use the same script on subsets of the data. Settings and environments are in [`scripts/training/README.md`](scripts/training/README.md).
 
 ### Evaluation
 
 Each system is a config that maps every call site to a model or adapter; `scripts/localize.py` writes them for your machine.
 
-| System in the paper | Run |
+| System | Run |
 |---|---|
-| FoamGPT-Nemotron (Table 1) | `scripts/run_benchmark.sh E32_UNIFIED <run>` |
-| Untuned Nemotron-Nano, Nemotron-Super, Qwen3.8, DeepSeek-V4, DeepSeek-V4.1 (Table 1) | The same command with `BASE_NANO`, `E33_SUPER_BASE` and `E37_SUPER_NOSTRIP`, `E46_QWEN38_NOSTRIP`, `E47_DSV4F_NOSTRIP`, `E48_DSV41F_NOSTRIP` |
-| FoamGPT-Gemma4 (Table 1) | Merge the adapter into `unsloth/gemma-4-26b-a4b-it` with PEFT and serve the merged model |
-| Shared vs. split adapters (Table 2) | `SPLIT_STAGE_SPECIFIC`, `SPLIT_RANDOM_R1`, `SPLIT_RANDOM_R2`, `SPLIT_RANDOM_R3` |
-| Base model at one call site (Figure 3) | The shared-adapter config with one call site's adapter removed |
-| Advanced cases (Table 3) | Add `--advanced` to the command |
+| FoamGPT-Nemotron | `scripts/run_benchmark.sh E32_UNIFIED <run>` |
+| Untuned Nemotron-Nano, Nemotron-Super, Qwen3.8, DeepSeek-V4, DeepSeek-V4.1 | The same command with `BASE_NANO`, `E33_SUPER_BASE` and `E37_SUPER_NOSTRIP`, `E46_QWEN38_NOSTRIP`, `E47_DSV4F_NOSTRIP`, `E48_DSV41F_NOSTRIP` |
+| FoamGPT-Gemma4 | Merge the adapter into `unsloth/gemma-4-26b-a4b-it` with PEFT and serve the merged model |
+| Shared vs. split adapters | `SPLIT_STAGE_SPECIFIC`, `SPLIT_RANDOM_R1`, `SPLIT_RANDOM_R2`, `SPLIT_RANDOM_R3` |
+| Base model at one call site | The shared-adapter config with one call site's adapter removed |
+| Advanced cases | Add `--advanced` to the command |
 
 Run `python3 scripts/score_run.py <ID>_holdout_run<k>` to score a finished run again.
 
 <details>
 <summary>Evaluation protocol</summary>
 
-Keep these settings for numbers comparable to the paper: temperature 0.6, a 100,000-token context, a 16,384-token output cap per call, at most ten solver attempts, one sequence at a time, eager mode, and tensor parallelism 4. A case succeeds when the solver log ends in `End`, the final time step is written, and all fields are finite. Crashes and malformed output count as failures. The configs of runs that cleaned each answer at its last `final` marker (the shared and split adapters, `E33_SUPER_BASE`) set `FOAMGPT_STRIP_FINAL=1`.
+Keep these settings to compare with the included results: temperature 0.6, a 100,000-token context, a 16,384-token output cap per call, at most ten solver attempts, one sequence at a time, eager mode, and tensor parallelism 4. A case succeeds when the solver log ends in `End`, the final time step is written, and all fields are finite. Crashes and malformed output count as failures. The configs of runs that cleaned each answer at its last `final` marker (the shared and split adapters, `E33_SUPER_BASE`) set `FOAMGPT_STRIP_FINAL=1`.
 
 </details>
 
 ## Repository structure
 
 ```
-assets/        Figures for this README
-code/          Agent harness adapted from Foam-Agent, benchmark runners, scoring scripts
-configs/       Model maps for every system, split-adapter maps, chat templates
-data/          Teacher traces, training and held-out sets, manifests, scaling subsets
-dataset/       Prompts of the evaluation cases; scripts/download_references.sh adds their reference solutions
-docs/          Audit of the reference solutions
-results/       Per-case results for every system in the paper
-scripts/       Setup, download, run and scoring scripts; serving environments
-training/      Fine-tuning scripts and environments
-workshop2025/  Code of the NeurIPS 2025 ML4PS workshop version
+code/          Agent harness, benchmark runners, and scoring code
+configs/       Model maps, split-adapter maps, and chat templates
+data/          Teacher traces, splits, manifests, and scaling subsets
+  dataset/     Evaluation prompts, reference-set audit, and downloaded reference solutions
+  retrieval/   OpenFOAM tutorial data and FAISS indexes
+  results/     Per-case evaluation results
+scripts/       Setup, downloads, benchmark execution, and scoring
+  training/    Fine-tuning scripts and training environments
+assets/        README figure
 ```
 
 ## Citation
 
 ```bibtex
-@article{wang2026foamgpt,
-  title   = {FoamGPT: Fine-Tuning Large Language Models for Agentic Automation of CFD Simulations with OpenFOAM},
-  author  = {Wang, Jiaying and Zhu, Mingzhi and Yue, Ling and Xu, Peijing and Zhang, Tingwen and Somasekharan, Nithin and Zeng, Yadong and Xu, Hang and Di, Shimin and Pan, Shaowu},
-  journal = {arXiv preprint arXiv:XXXX.XXXXX},
-  year    = {2026}
-}
-
 @inproceedings{yue2025foamgpt,
   title     = {FoamGPT: Fine-tuning Large Language Model for Agentic Automation of CFD Simulations with OpenFOAM},
   author    = {Yue, Ling and Xu, Peijing and Zhang, Tingwen and Somasekharan, Nithin and Pan, Shaowu},
   booktitle = {Machine Learning and the Physical Sciences Workshop, NeurIPS},
-  year      = {2025}
+  year      = {2025},
+  url       = {https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_271.pdf}
 }
 ```
 
 ## License and acknowledgments
 
-The code is released under the [MIT License](LICENSE). `code/` is adapted from [Foam-Agent](https://github.com/csml-rpi/Foam-Agent) (MIT), and the evaluation cases come from FoamBench in [CFDLLMBench](https://arxiv.org/abs/2509.20374) (BSD 3-Clause, [`dataset/LICENSE`](dataset/LICENSE)). The adapters follow the licenses of their base models. The teacher traces are outputs of Claude Opus 4.6 obtained through Amazon Bedrock and are subject to Anthropic's terms of service; they are released for research use.
+The code is released under the [MIT License](LICENSE). `code/` is adapted from [Foam-Agent](https://github.com/csml-rpi/Foam-Agent) (MIT), and the evaluation cases come from FoamBench in [CFDLLMBench](https://github.com/NLR-Theseus/cfdllmbench) (BSD 3-Clause, [`data/dataset/LICENSE`](data/dataset/LICENSE)). The adapters follow the licenses of their base models. The teacher traces are outputs of Claude Opus 4.6 obtained through Amazon Bedrock and are subject to Anthropic's terms of service; they are released for research use.
