@@ -5,6 +5,8 @@ configs/*.json
 configs/*.env
 # unpacked training data (scripts/training/README.md)
 data/*.jsonl
+# written by scripts/training/make_subsets.py
+data/scaling/subsets/
 # downloaded by scripts/download_references.sh
 data/dataset/**/GT_Files/
 # run outputs

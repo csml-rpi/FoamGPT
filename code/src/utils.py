@@ -2183,12 +2183,15 @@ class LLMService:
 
         # Resolve per-substep override (substep takes priority over service-level)
         substep = (log_context or {}).get("substep", "")
+        # A retry such as rewrite_files_repair names its call site in "route": it uses that
+        # site's model, while the call log keeps the retry's own substep
+        route = (log_context or {}).get("route", substep)
         # kit_e49: per-call context for the call log (call site, case log dir)
         _CALL_CTX.substep = substep
         _CALL_CTX.log_dir = os.path.dirname(self.dataset_log_path) if getattr(self, "dataset_log_path", None) else None
-        if substep and substep in self.substep_llms:
-            effective_llm   = self.substep_llms[substep]
-            effective_model = self.substep_models[substep]
+        if route and route in self.substep_llms:
+            effective_llm   = self.substep_llms[route]
+            effective_model = self.substep_models[route]
         else:
             effective_llm   = self.llms[service]
             effective_model = self.models[service]

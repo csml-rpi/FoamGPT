@@ -16,6 +16,7 @@ original file order. The 100% file must be byte-identical to the source train.js
 Row counts here are BEFORE the length filter; after-filter counts are produced by the
 training script's own build_combined_dataset() in the training env (bin/filter_check.py).
 """
+import argparse
 import collections
 import hashlib
 import json
@@ -25,9 +26,7 @@ import sys
 
 SEED = 20260928
 LEVELS = {"L025": 19, "L050": 39, "L075": 58, "L100": 77}
-SCALING = "/path/to/foamgpt/scaling"
-SRC = os.path.join(SCALING, "from_cluster/unsloth/train.jsonl")
-OUT = os.path.join(SCALING, "subsets")
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SUBSTEPS = ["parse_case_info", "build_advice", "decompose_subtasks", "generate_file",
             "allrun_commands", "allrun_script", "error_analysis", "rewrite_plan",
             "rewrite_files"]
@@ -42,9 +41,18 @@ def sha256(path):
 
 
 def main():
-    if os.path.exists(OUT):
-        sys.exit(f"{OUT} already exists — refusing to overwrite")
-    with open(SRC, "rb") as f:
+    parser = argparse.ArgumentParser(description="Build the nested scaling subsets.")
+    parser.add_argument("--train", default=os.path.join(ROOT, "data", "train.jsonl"),
+                        help="Training JSONL to sample from (unpacked data/train.jsonl.gz)")
+    parser.add_argument("--output", default=os.path.join(ROOT, "data", "scaling", "subsets"),
+                        help="Output folder; must not exist yet")
+    args = parser.parse_args()
+    src, out = args.train, args.output
+    if os.path.exists(out):
+        sys.exit(f"{out} already exists — refusing to overwrite")
+    if not os.path.exists(src):
+        sys.exit(f"{src} not found; unpack it first: gunzip -k data/train.jsonl.gz")
+    with open(src, "rb") as f:
         raw_lines = [l for l in f.read().split(b"\n") if l.strip()]
     rows = [json.loads(l) for l in raw_lines]
     assert len(rows) == 2647, len(rows)
@@ -68,15 +76,15 @@ def main():
         sequence += [f"Basic/{f}/{var_order[f][r]}" for f in order]
     assert len(sequence) == 77 and len(set(sequence)) == 77
 
-    os.makedirs(OUT)
-    summary = {"seed": SEED, "source": SRC, "source_sha256": sha256(SRC),
+    os.makedirs(out)
+    summary = {"seed": SEED, "source": os.path.relpath(src, ROOT), "source_sha256": sha256(src),
                "algorithm": __doc__.strip().splitlines()[2:10],
                "per_family_variant_order": var_order,
                "round_family_order": rounds, "sequence": sequence, "levels": {}}
     for name, n in LEVELS.items():
         ids = sequence[:n]
         idset = set(ids)
-        d = os.path.join(OUT, name)
+        d = os.path.join(out, name)
         os.makedirs(d)
         keep = [i for i, r in enumerate(rows) if r["case_id"] in idset]
         with open(os.path.join(d, "case_ids.txt"), "w") as f:
@@ -100,7 +108,7 @@ def main():
     for a, b in (("L025", "L050"), ("L050", "L075"), ("L075", "L100")):
         assert set(lv[a]["case_ids"]) < set(lv[b]["case_ids"])
     assert lv["L100"]["train_jsonl_sha256"] == summary["source_sha256"], "100% file not identical"
-    with open(os.path.join(OUT, "selection.json"), "w") as f:
+    with open(os.path.join(out, "selection.json"), "w") as f:
         json.dump(summary, f, indent=1)
     for name in LEVELS:
         print(name, lv[name]["rollouts"], "rollouts,", lv[name]["rows_before_filter"],

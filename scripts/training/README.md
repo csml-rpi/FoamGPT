@@ -19,4 +19,4 @@ python scripts/training/finetune_gemma4_26b_a4b_unified.py --train data/train.js
 # settings can be overridden through environment variables (LEARNING_RATE, NUM_EPOCHS, LORA_R, ...; see the top of each script)
 ```
 
-Split adapters: filter `train.jsonl` to the call sites of one group (the maps are in `configs/split/`) and train one adapter per group with the same script and settings. Scaling adapters: `make_subsets.py` writes each level's `train.jsonl`; train each with the same script and settings.
+Split adapters: filter `train.jsonl` to the call sites of one group (the maps are in `configs/split/`) and train one adapter per group with the same script and settings. Scaling adapters: `python scripts/training/make_subsets.py` writes each level's `train.jsonl` to `data/scaling/subsets/`; train each with the same script and settings.

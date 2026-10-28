@@ -554,6 +554,7 @@ def rewrite_files(
             )
             raw = global_llm_service.invoke("write", repair_user_prompt, rewrite_system_prompt,
                                            log_context={"step": "rewrite", "substep": "rewrite_files_repair",
+                                                        "route": "rewrite_files",
                                                         "loop_iteration": loop_count, "attempt": attempt + 1})
     if response is None:
         raise ValueError(f"Failed to parse rewrite_files JSON after retries. Last error: {last_err}")
