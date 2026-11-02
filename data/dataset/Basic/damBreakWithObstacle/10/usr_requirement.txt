@@ -1,0 +1,1 @@
+do a laminar dam break with obstacle simulation. user interfoam solver. The domain extent is 1x1x1. Use 32 grid points in all directions. Use density of air to be 1 kg/m3 and density of water to be 1000 kg/m3. Take the viscosity of air to be 1.48e-05 and viscosity of water to be 1e-05. The simulation runs from t=0s to t=0.1s with a timestep of 0.001s and a write interval of 0.02.

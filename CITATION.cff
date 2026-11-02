@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use FoamGPT, please cite the paper below."
+title: "FoamGPT"
+repository-code: "https://github.com/csml-rpi/FoamGPT"
+license: MIT
+authors:
+  - family-names: Wang
+    given-names: Jiaying
+  - family-names: Zhu
+    given-names: Mingzhi
+  - family-names: Yue
+    given-names: Ling
+  - family-names: Xu
+    given-names: Peijing
+  - family-names: Zhang
+    given-names: Tingwen
+  - family-names: Somasekharan
+    given-names: Nithin
+  - family-names: Zeng
+    given-names: Yadong
+  - family-names: Xu
+    given-names: Hang
+  - family-names: Di
+    given-names: Shimin
+  - family-names: Pan
+    given-names: Shaowu
+preferred-citation:
+  type: conference-paper
+  title: "FoamGPT: Fine-Tuning Large Language Model for Agentic Automation of CFD Simulations with OpenFOAM"
+  collection-title: "Machine Learning and the Physical Sciences Workshop, NeurIPS"
+  year: 2025
+  url: "https://ml4physicalsciences.github.io/2025/files/NeurIPS_ML4PS_2025_271.pdf"
+  authors:
+    - family-names: Yue
+      given-names: Ling
+    - family-names: Xu
+      given-names: Peijing
+    - family-names: Zhang
+      given-names: Tingwen
+    - family-names: Somasekharan
+      given-names: Nithin
+    - family-names: Pan
+      given-names: Shaowu

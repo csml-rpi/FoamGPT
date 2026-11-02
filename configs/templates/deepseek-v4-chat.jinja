@@ -1,0 +1,30 @@
+{#- FoamGPT E47: DeepSeek-V4 prompt in chat mode (thinking off). The model repo ships no Jinja template; this
+    reproduces encoding/encoding_dsv4.py encode_messages(messages, thinking_mode="chat") for system, user and
+    assistant messages without tools: BOS, system text as is, consecutive user messages merged into one user turn
+    (blank line between), "<｜Assistant｜></think>" after a user turn that is followed by an assistant turn or ends
+    the conversation, assistant text + EOS. Verified string-for-string against the reference encoder
+    (bin/check_dsv4_template.py). The harness's enable_thinking / reasoning_effort kwargs are ignored: always chat mode. -#}
+{%- set ns = namespace(prev_user=false) -%}
+{{- "<｜begin▁of▁sentence｜>" -}}
+{%- for m in messages -%}
+    {%- set c = m.content if m.content is not none else "" -%}
+    {%- if m.role == "user" -%}
+        {{- ("\n\n" if ns.prev_user else "<｜User｜>") + c -}}
+        {%- set ns.prev_user = true -%}
+    {%- else -%}
+        {%- if ns.prev_user and m.role == "assistant" -%}
+            {{- "<｜Assistant｜></think>" -}}
+        {%- endif -%}
+        {%- set ns.prev_user = false -%}
+        {%- if m.role == "system" -%}
+            {{- c -}}
+        {%- elif m.role == "assistant" -%}
+            {{- c + "<｜end▁of▁sentence｜>" -}}
+        {%- else -%}
+            {{- raise_exception("deepseek-v4-chat template: unsupported role " ~ m.role) -}}
+        {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}
+{%- if ns.prev_user -%}
+    {{- "<｜Assistant｜></think>" -}}
+{%- endif -%}

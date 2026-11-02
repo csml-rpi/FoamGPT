@@ -1,0 +1,1 @@
+do a 2D nozzle flow simulation using interfoam solver and  Spalart-Allmaras turbulence model. Use a time step of 1e-8 seconds, output results every 1e-06s. The end time is 1e-5s. seconds, and run the simulation until a final time of 10 seconds.

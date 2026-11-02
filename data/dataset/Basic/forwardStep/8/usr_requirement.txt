@@ -1,0 +1,1 @@
+do a laminar, compressible flow over a forward-facing step using the rhoCentralFoam solver. Boundary conditions include a fixed velocity of 2.3m/s and temperature of 1 K at the inlet and slip conditions on the obstacle. Use timestep of 0.002 and output every 0.1. Finaltime is 4.

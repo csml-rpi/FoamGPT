@@ -1,0 +1,1 @@
+Perform a 3D Bernard Cell simulation using OpenFOAM buoyantFoam solver. The computational domain spans 9 m x 1 m x 2 m. The simulation begins at t=0 seconds and runs until t = 1000 seconds with a time step of 1 second, and results are written at intervals of every 50 seconds. One wall has a temperature of 315 K, while the other has a temperature of 295 K.

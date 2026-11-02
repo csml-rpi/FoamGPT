@@ -1,0 +1,14 @@
+MetaGPT_PATH: /home/openfoam/FoamBench/algorithm/MetaOpenFOAM/MetaGPT
+OPENAI_API_KEY: REDACTED
+OPENAI_BASE_URL: https://api.openai.com/v1
+batchsize: 10
+max_loop: 1
+model: gpt-4o
+run_times: 1
+searchdocs: 2
+temperature: 0.0
+usr_requirment: 'do a shallow water simulation over a square bump using the shallowWaterFoam
+  solver. The domain spans 1 x 1 x 0.1, discretized into 20 x 20 x 1 grid points.
+  The simulation initializes with a uniform water depth of 0.1 m and a uniform momentum
+  field of (0.001,0,0). The simulation runs from 0 s to 100 s with a timestep of 0.1
+  s and writes results every 1 s. '

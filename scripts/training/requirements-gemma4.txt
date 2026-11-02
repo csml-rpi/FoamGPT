@@ -1,0 +1,8 @@
+# shared Gemma4 adapter (versions recorded with the trained adapter)
+trl==0.24.0
+transformers==5.5.0
+torch==2.10.0
+peft==0.19.1
+datasets==4.3.0
+tokenizers==0.22.2
+unsloth==2026.4.8
